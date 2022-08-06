@@ -1,0 +1,52 @@
+* {
+    padding:0px;
+    margin:0px;
+    box-sizing: border-box;
+}
+
+.nav-item {
+    margin:10px;
+    border: 2px solid red;
+    display: inline-block;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main-wrapper{
+    width: 1200px;
+    display: grid;
+    grid-template-areas: "h h"
+                         "s c"
+                         "f f";
+    grid-template-columns: 2fr 10fr;
+}
+
+.header{
+    grid-area: h;
+    text-align: center;
+    border: 2px solid blue;
+}
+
+.sidebar {
+    grid-area: s;
+
+    border: 2px solid red;
+}
+
+.content {
+    grid-area: c;
+    border: 2px solid green;
+    text-align: center;
+    background-color: darkorange;
+    height: 100vh;
+
+}
+
+.footer {
+    grid-area: f;
+    text-align: center;
+    border: 2px solid yellow;
+
+}
