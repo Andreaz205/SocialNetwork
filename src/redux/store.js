@@ -4,11 +4,13 @@ import homeReducer from "./home-reducer";
 import authReducer from "./auth-reducer";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import appReducer from "./app-reducer";
+import chatReducer from "./chat-reducer.ts";
 
 let rootReducer = combineReducers({
     homePage: homeReducer,
     auth: authReducer,
-    app: appReducer
+    app: appReducer,
+    chat: chatReducer
 })
 
 

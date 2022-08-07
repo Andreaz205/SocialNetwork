@@ -1,13 +1,24 @@
-import {instance} from "./api";
+import $api from "./api";
 
 export const authApi = {
-    me() {
-        return instance.get('auth/me').then(res => res.data);
+    login:(email, password) => {
+        return $api.post('/login',{email,password})
+            .then(res => {
+            console.log(res.data)
+            return res})
     },
-    login(email, password, rememberMe = false, captcha =false) {
-        return instance.post('auth/login',{email, password, rememberMe, captcha})
+
+    logout  :() => {
+        return $api.post('/logout')
+            .then(res => {
+                console.log(res.data)
+                return res})
     },
-    logout() {
-        return instance.delete('auth/login')
+
+    registration: (email, password) => {
+        return $api.post('/registration',{email,password})
+            .then(res => {
+                console.log(res.data)
+                return res})
     }
 }

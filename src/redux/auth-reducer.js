@@ -1,10 +1,12 @@
 import {authApi} from "../api/auth-api";
 
+
 let initialState = {
-    userId: null,
-    email: null,
     login: null,
+    id: null,
+    isActivated: false,
     isAuth: false,
+    isFetching: true
     // captchaUrl:null
 }
 
@@ -26,9 +28,9 @@ const authReducer=(state = initialState, action) => {
 }
 
 export const authActions = {
-    setAuthUserData: (userId, email, login, isAuth) => ({
+    setAuthUserData: ( email, id, isActivated, isAuth=true) => ({
         type: "SET_USER_DATA",
-        payload: {userId, email, login, isAuth}
+        payload: {email, id, isActivated, isAuth}
     }),
     initializedSuccess: () => ({
         type: "INITIALIZED_SUCCESS",
@@ -44,24 +46,52 @@ export const getAuthUserData = () => async (dispatch) => {
     }
 }
 
-export const login = ( email, password, rememberMe, captcha ) => async (dispatch) => {
-    let data = await authApi.login(email, password, rememberMe, captcha)
-    if (data.resultCode ===0) {
-        dispatch(getAuthUserData())
-    } else {
-    let messege = data.messeges.length > 0 ? data.messeges[0] : "Some error";
-    // dispatch(stopSubmit("login",{
-    //     _error: messege
-    // }))
-    }
+export const login =(fields) => async (dispatch) => {
+    try{
+        const {email, password} = fields
+        let response = await authApi.login(email, password)
+        console.log(response.data)
+        localStorage.setItem('token', response.data.accessToken)
+        dispatch(authActions.setAuthUserData(response.data.user))
 
+    } catch (e){
+        console.log(e)
+    }
 }
 
-export const logout = () =>async (dispatch) => {
-    let response = await authApi.logout()
-    if (response.data.resultCode ===0) {
+export const logout =() => async (dispatch) => {
+    try{
+        let response = await authApi.logout()
+        console.log(response)
+        localStorage.removeItem('token')
         dispatch(authActions.setAuthUserData(null, null, null, false))
+
+    } catch (e){
+        console.log(e)
     }
 }
+
+export const registration =(fields) => async (dispatch) => {
+    try{
+        const {email, password} = fields
+        let response = await authApi.registration(email, password)
+        console.log(response)
+        localStorage.setItem('token', response.data.accessToken)
+        dispatch(authActions.setAuthUserData(response.data.user))
+
+    } catch (e){
+        console.log(e)
+    }
+}
+// const {email, password} = fields
+// let data = await authApi.login(email, password)
+// console.log(data)
+// dispatch(authActions.setAuthUserData('Andrei', 'fafa', null, false))
+// export const logout = () =>async (dispatch) => {
+//     let response = await authApi.logout()
+//     if (response.data.resultCode ===0) {
+//         dispatch(authActions.setAuthUserData(null, null, null, false))
+//     }
+// }
 
 export default authReducer;

@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router-dom';
 const Header = () =>
 {
     const isAuth = useSelector(selectIsAuth)
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    let someFunction = () => {
-        console.log('Функция сработала')
-        navigate('/login')
-    }
+    // let onLogoutClick = () => {
+    //     console.log('Функция сработала')
+    //     navigate('/login')
+    // }
 
     // const dispatch = useDispatch()
     // const logoutCallback = () => {
@@ -32,6 +32,7 @@ const Header = () =>
                         <div>
                             BazunoffChat
                             <button><Link to={"/login"}>logout</Link></button>
+
                         </div>
                     :
                         <button>

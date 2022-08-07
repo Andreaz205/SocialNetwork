@@ -3,67 +3,56 @@ import {useDispatch, useSelector} from "react-redux";
 import {Formik, Field, Form} from "formik";
 import "./LoginPage.css"
 import {login} from "../../redux/auth-reducer";
+import Preloader from "../../assets/Preloader";
 
 
 const LoginPage = () =>
 {
     const dispatch = useDispatch();
+    const isAuth = useSelector((state)=>state.auth.isAuth)
+
     return(
-        <Formik
-            initialValues={{
-                login: 'email/phone',
-                password: '',
-                rememberMe: false
-            }}
-            onSubmit={(fields, {setSubmitting}) =>{
-                setTimeout(() => {
-                    alert('SUCCESS!! :-)\n\n' + JSON.stringify(fields, null, 4))
-                    login(...fields, false)
-                    setSubmitting(false)
+        <>
+            {isAuth ?  //здесь не доделал нужно после показа прелоадера отправить санку и после ответа сервера задиспатчить его в стор и скрыть прелоадер
+                (<Preloader/>)
+                :
+                <Formik
+                    initialValues={{
+                        email: 'email',
+                        password: '',
+                        rememberMe: false
+                    }}
+                    onSubmit={(fields) => {
+                        console.log('SUCCESS!! :-)\n\n' + JSON.stringify(fields, null, 4))
+                        dispatch(login(fields))
 
+                    }}
+                >
+                    {() => (
+                        <Form>
+                            <label className="login_form" htmlFor="email">LOGIN</label>
 
-                    login(2,4,0,0)
+                            <Field className="login_form" name="email" type="email" id="email"/>
 
+                            <label className="login_form" htmlFor="password">PASSWORD</label>
 
-                }, 1000);
-            }}
-        >
-            {() => (
-                <Form>
-                    <label className="login_form" htmlFor="login">LOGIN</label>
+                            <Field className="login_form" name="password" type="password" id="password"/>
 
-                    <Field className="login_form" name="login" type="email" id="login"/>
+                            <div className="login_form">
+                                <span>Запомнить меня</span>
+                                <Field name="rememberMe" type="checkbox"/>
+                            </div>
 
-                    <label className="login_form" htmlFor="password">PASSWORD</label>
+                            <button className="login_form" type="submit"> ВОЙТИ</button>
+                            {/*<button className="login_form"  onClick={registrationCallback}>Регистрация</button>*/}
+                        </Form>
 
-                    <Field className="login_form" name="password" type="password" id="password" />
-
-                    <div className="login_form">
-                        <span>Запомнить меня</span>
-                        <Field  name="rememberMe" type="checkbox" />
-                    </div>
-
-                    <button className="login_form" type="submit" > ВОЙТИ </button>
-                </Form>
-            )}
-        </Formik>
+                    )}
+                </Formik>
+            }
+        </>
     )
 }
-            {/*handleSubmit, handleChange, handleBlur, values, errors onSubmit={handleSubmit*/}
-{/*//         <div className="loginFormWrapper" style={{margin: 10}}>*/}
-{/*//             <form>*/}
-{/*//                 <label id="login">Введите логин</label>*/}
-{/*//                 <br />*/}
-{/*//                 <input type="email" name="login" />*/}
-{/*//                 <br />*/}
-{/*//                 <label id="password">Введите пароль</label>*/}
-{/*//                 <br />*/}
-{/*//                 <input name="password"/>*/}
-{/*//                 <br />*/}
-{/*//                 <input type="submit"/>*/}
-{/*//             </form>*/}
-{/*//         </div>*/}
-{/*//     )*/}
-{/*// }*/}
+
 
 export   {LoginPage}
