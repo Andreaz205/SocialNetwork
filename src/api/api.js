@@ -3,9 +3,11 @@ import axios from "axios";
 export const API_URL = 'http://localhost:5000/api'
 
 const $api = axios.create({
-    withCredentials: true,
-    baseURL: API_URL,
-    // headers: {}
+        withCredentials: true,
+        baseURL: API_URL,
+        // headers: {
+        //     'API-KEY': '47d554b5-f9b3-4a4f-8c3a-c25ab1c97dea'
+        // }
     }
 )
 

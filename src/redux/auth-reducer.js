@@ -3,10 +3,11 @@ import {authApi} from "../api/auth-api";
 
 let initialState = {
     login: null,
-    id: null,
+    userId: null,
     isActivated: false,
     isAuth: false,
-    isFetching: true
+    isFetching: false,
+    location: ''
     // captchaUrl:null
 }
 
@@ -20,7 +21,21 @@ const authReducer=(state = initialState, action) => {
         case "SET_USER_DATA":
             return{
                 ...state,
-                ...action.payload
+                email: action.email,
+                id: action.id,
+                isActivated: action.isActivated,
+                userId: action.userId,
+                isAuth: action.isAuth
+            }
+        case "FETCH_AUTH":
+            return{
+                ...state,
+                isAuth: action.payload
+            }
+        case "FETCHING":
+            return{
+                ...state,
+                isFetching: action.payload
             }
         default:
             return state;
@@ -28,19 +43,35 @@ const authReducer=(state = initialState, action) => {
 }
 
 export const authActions = {
-    setAuthUserData: ( email, id, isActivated, isAuth=true) => ({
+    setAuthUserData: ( email, id, isActivated, userId, isAuth) => ({
         type: "SET_USER_DATA",
-        payload: {email, id, isActivated, isAuth}
+        payload: {email, id, isAuth, userId, isActivated}
     }),
     initializedSuccess: () => ({
         type: "INITIALIZED_SUCCESS",
         payload: true
+    }),
+    fetchIsAuthFalse: () => ({
+        type: "FETCH_AUTH",
+        payload: false
+    }),
+    fetchIsAuthTrue: () => ({
+        type: "FETCH_AUTH",
+        payload: true
+    }),
+    fetchingTrue: () => ({
+        type: "FETCHING",
+        payload: true
+    }),
+    fetchingFalse: () => ({
+        type: "FETCHING",
+        payload: false
     })
 }
 
 export const getAuthUserData = () => async (dispatch) => {
     let meData = await authApi.me()
-    if (meData.resultCode === 0) {
+    if (meData) {
         let {id, email, login} = meData.data
         dispatch(authActions.setAuthUserData(id, email, login, true))
     }
@@ -61,13 +92,19 @@ export const login =(fields) => async (dispatch) => {
 
 export const logout =() => async (dispatch) => {
     try{
+
+        dispatch(authActions.fetchingTrue())
         let response = await authApi.logout()
-        console.log(response)
+        dispatch(authActions.fetchIsAuthFalse())
+        console.log(response.data)
         localStorage.removeItem('token')
         dispatch(authActions.setAuthUserData(null, null, null, false))
+        dispatch(authActions.fetchingFalse())
 
     } catch (e){
-        console.log(e)
+        console.log(e.message)
+        dispatch(authActions.fetchingFalse())
+
     }
 }
 

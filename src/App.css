@@ -10,6 +10,10 @@
     display: inline-block;
 }
 
+li {
+    list-style-type: none;
+}
+
 a {
     text-decoration: none;
 }
@@ -21,12 +25,14 @@ a {
                          "s c"
                          "f f";
     grid-template-columns: 2fr 10fr;
+    margin: 0 auto;
 }
 
 .header{
     grid-area: h;
     text-align: center;
     border: 2px solid blue;
+    height: 40px;
 }
 
 .sidebar {
@@ -40,13 +46,16 @@ a {
     border: 2px solid green;
     text-align: center;
     background-color: darkorange;
-    height: 100vh;
+    min-height: calc(100vh - (40px + 30px))
+
+    /*height: auto;*/
 
 }
 
 .footer {
     grid-area: f;
     text-align: center;
-    border: 2px solid yellow;
+    border: 2px solid black;
+    height: 30px;
 
 }
