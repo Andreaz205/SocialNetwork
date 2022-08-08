@@ -1,10 +1,17 @@
-import {chatAPI} from '../api/chat-api'
+import {ResultCodeForCapcthaEnum, ResultCodesEnum} from '../api/api'
+import {stopSubmit} from 'redux-form'
+import {authAPI} from '../api/auth-api'
+import {securityAPI} from '../api/security-api'
+import {BaseThunkType, InferActionsTypes} from './redux-store'
+import {Action, Dispatch} from 'redux'
+import {FormAction} from 'redux-form/lib/actions'
+import {chatAPI, ChatMessageAPIType, StatusType} from '../api/chat-api'
 import {v1} from 'uuid'
 
 
 let initialState = {
     messages: [],
-    status: 'ready'
+    status: 'pending'
 }
 
 const chatReducer = (state = initialState, action) => {
@@ -34,7 +41,7 @@ export const actions = {
     })
 }
 
-let _newMessageHandler: ((messages) => void) = null
+let _newMessageHandler: ((messages) => {}) = null
 const newMessageHandlerCreator = (dispatch) => {
     if (_newMessageHandler === null) {
         _newMessageHandler = (messages) => {
@@ -44,7 +51,7 @@ const newMessageHandlerCreator = (dispatch) => {
     return _newMessageHandler
 }
 
-let _statusChangedHandler: ((status) => void) = null
+let _statusChangedHandler: ((status) => {}) = null
 const statusChangedHandlerCreator = (dispatch) => {
     if (_statusChangedHandler === null) {
         _statusChangedHandler = (status) => {
